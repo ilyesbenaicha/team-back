@@ -37,7 +37,6 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id)
     });
   } else {
     res.status(400);
@@ -56,11 +55,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token: generateToken(user._id)
+      token: generateToken(user._id, user.email, user.role)
     });
   } else {
     res.status(400);
@@ -83,9 +78,9 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 //generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "30d"
+const generateToken = ( id, email, role) => {
+  return jwt.sign({ id, email , role }, process.env.JWT_SECRET, {
+    expiresIn: "24h"
   });
 };
 
