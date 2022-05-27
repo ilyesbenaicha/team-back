@@ -6,7 +6,8 @@ const {
 } = require("../controllers/userController");
 const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
-router.post("/register", registerUser);
+const IssuperAdmin= require ("../middleware/superAdminMiddleware")
+router.post("/register",protect, IssuperAdmin, registerUser);
 router.post("/login", loginUser);
 router.get("/me", protect, getMe);
 
