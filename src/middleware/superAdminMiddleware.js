@@ -1,5 +1,4 @@
-const IssuperAdmin = async(req,res,next) => { 
-    console.log ('***',req.user.role)
+const IssuperAdmin = async(req,res,next) => {
         if(req.user.role==='SuperAdmin')
         return next()
        return res.status(401).json({msg:'no '})

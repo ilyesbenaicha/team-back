@@ -77,10 +77,48 @@ const getMe = asyncHandler(async (req, res) => {
     role
   });
 });
+
+// @desc update user
+// @route update /api/user
+// @access private
+const updateUser = asyncHandler(async(req,res)=>{
+  const user = await User.findById(req.params.id)
+
+  if (!user){
+      res.status(404)
+      throw new Error('user not found')
+  }
+  const updateUser = await User.findByIdAndUpdate(req.params.id, req.body,{
+      new: true,
+  })
+  res.status(200).json(updateUser)
+}
+);
+// @desc delete user
+// @route delete /api/user
+// @access private
+const deletUser = asyncHandler(async(req,res)=>{
+  const user = await User.findById(req.params.id)
+ 
+  if (!user){
+      res.status(404)
+      throw new Error('User not found')
+  }
+  await user.remove()
+  res.status(200).json({id: req.params.id})
+});
+// @desc get project
+// @route get /api/project
+// @access private
+const getUser = asyncHandler(async (req,res)=>{
+  const user = await User.find({user: req.user.id})
+  res.status(200).json(user)
+}
+)
 //generate JWT
 const generateToken = ( id, email, role) => {
   return jwt.sign({ id, email , role }, process.env.JWT_SECRET, {
-    expiresIn: "24h"
+    expiresIn: "10m"
   });
 };
 
@@ -88,5 +126,8 @@ module.exports = {
   registerUser,
   loginUser,
   getMe,
+  updateUser,
+  deletUser,
+  getUser,
   generateToken
 };
