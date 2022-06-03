@@ -1,8 +1,19 @@
+require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
+const nodemailer = require("nodemailer")
+const nodemailMailgun= require("nodemailer-mailgun-transport")
 
+  
+const auth={
+  auth:{
+    api_key: 'e2c85bc99a6d31c027668e37768f5ee6-27a562f9-febfceee',
+    domain: 'sandbox94b529ede1bb4e58a3fe2d23979357c4.mailgun.org'
+  }
+}
+let transporter = nodemailer.createTransport(nodemailMailgun(auth));
 // @desc register new user
 // @route Post /api/user
 //@access Public
@@ -37,7 +48,17 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-    });
+    }).then(
+      transporter.sendMail({
+        from: 'team37240@gmail.com',
+        to: email,
+        subject: 'user account',
+        html: '<h1> it work</h1>'
+      }
+      ).catch(err=>{
+        console.log(err);
+      })
+    )
   } else {
     res.status(400);
     throw new Error("INvalid user data ");
@@ -54,7 +75,8 @@ const loginUser = asyncHandler(async (req, res) => {
   //check for user email
   const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({
+    res.json({ 
+     
       token: generateToken(user._id, user.email, user.role)
     });
   } else {
