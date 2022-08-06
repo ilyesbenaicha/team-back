@@ -1,6 +1,6 @@
 const errorHandler = (err,req,res,next)=>{
-    const statusCode= res.statusCode ? res.statusCode : 500
-    res.status(statusCode)
+    const sendStatusCode= res.sendStatusCode ? res.sendStatusCode : 500
+    res.sendStatus(sendStatusCode)
     
     res.json({
         message: err.message,

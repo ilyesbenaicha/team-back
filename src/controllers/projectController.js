@@ -5,7 +5,7 @@ const Project = require('../model/projectModel')
 // @access private
 const getproject = asyncHandler(async (req,res)=>{
     const project = await Project.find({user: req.user.id})
-    res.status(200).json(project)
+    res.sendStatus(200).json(project)
 }
 )
 
@@ -15,7 +15,7 @@ const getproject = asyncHandler(async (req,res)=>{
 // @access private
 const addproject = asyncHandler(async(req,res)=>{
     if (!req.body.title && !req.body.description ) {
-        res.status(400)
+        res.sendStatus(400)
         throw new Error('please add a title')
     }
 
@@ -27,7 +27,7 @@ const addproject = asyncHandler(async(req,res)=>{
         developer: req.body.developer,
         user: req.user.id
     })
-    res.status(201).json(project)
+    res.sendStatus(201).json(project)
 })
 
 // @desc update project
@@ -37,13 +37,13 @@ const updateproject = asyncHandler(async(req,res)=>{
     const project = await project.findById(req.params.id)
 
     if (!project){
-        res.status(404)
+        res.sendStatus(404)
         throw new Error('project not found')
     }
     const updatedproject = await project.findByIdAndUpdate(req.params.id, req.body,{
         new: true,
     })
-    res.status(200).json(updatedproject)
+    res.sendStatus(200).json(updatedproject)
 }
 )
 // @desc delete project
@@ -53,11 +53,11 @@ const deletproject = asyncHandler(async(req,res)=>{
     const project = await project.findById(req.params.id)
 
     if (!project){
-        res.status(404)
+        res.sendStatus(404)
         throw new Error('project not found')
     }
     await project.remove()
-    res.status(200).json({id: req.params.id})
+    res.sendStatus(200).json({id: req.params.id})
 })
 
 module.exports={

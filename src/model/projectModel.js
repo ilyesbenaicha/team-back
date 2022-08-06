@@ -19,10 +19,10 @@ const projectSchema = mongoose.Schema({
         type: String,
         required:[true, 'please add a technology']
     },
-    developer:{
+    developer:[{
         type: String,
         required: true
-    },
+    }],
  userId:{
        type : mongoose.Schema.Types.ObjectId,
       ref: 'User'
