@@ -11,7 +11,11 @@ const projectSchema = mongoose.Schema({
         required:[true, 'please add an description'],
        
     },
-    duration:{
+    Start_date:{
+        type: Date,
+        required:[true, 'please add a duration']
+    },
+    End_date:{
         type: Date,
         required:[true, 'please add a duration']
     },
