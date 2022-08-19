@@ -5,13 +5,13 @@ const Task = require('../model/taskModel')
 // @access private
 const getTask = asyncHandler(async (req,res)=>{
     const task = await Task.find({user: req.user.id})
-    res.sendStatus(200).json(project)
+    res.sendStatus(200).json(task)
 }
 )
 
  
-// @desc set project
-// @route set /api/project
+// @desc set task
+// @route set /api/task
 // @access private
 const addTask = asyncHandler(async(req,res)=>{
     if (!req.body.title && !req.body.description ) {

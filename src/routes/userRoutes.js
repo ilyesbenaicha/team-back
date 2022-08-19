@@ -6,7 +6,8 @@ const {
   deletUser,
   getMe,
   getUser,
-  getAllUsers
+  getAllUsers,
+  getAdmins
 } = require("../controllers/userController");
 const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
@@ -17,4 +18,6 @@ router.get("/me", protect, getMe);
 router.route('/').get(protect,IssuperAdmin,getUser)
 router.route('/:id').put(protect,updateUser).delete(protect,IssuperAdmin,deletUser)
 router.get("/getAll",getAllUsers)
+router.get("/getAdmin",getAdmins)
+
 module.exports = router;

@@ -2,7 +2,7 @@
 const router = express.Router()
  const {} = require('../controllers/ProjectController');
 const { getTask, addTask, updateTask, deleteTask } = require('../controllers/tacheController');
-const adminMiddleware = require('../middleware/adminMiddleware');
+const adminMiddleware = require('../middleware/superAdminMiddleware');
  const { protect } = require("../middleware/authMiddleware");
 
 router.route('/').get(protect,getTask).post(protect,adminMiddleware,addTask)

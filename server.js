@@ -15,5 +15,6 @@ app.use(cors(
 }));
 app.use('/api/user', require('./src/routes/userRoutes'))
 app.use ('/api/project', require('./src/routes/projectRoutes'))
+app.use('/api/task', require('./src/routes/tacheRoutes'))
 app.use(errorHandler)
 app.listen(port, ()=> console.log(`Server started on port ${port}`))

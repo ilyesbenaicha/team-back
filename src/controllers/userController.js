@@ -121,6 +121,11 @@ const getAllUsers = asyncHandler(async (req,res)=>{
   res.status(200).json(user)
 }
 )
+const getAdmins = asyncHandler(async (req,res)=>{
+  const user = await User.find({ "role": "Admin" } )
+  res.status(200).json(user)
+}
+)
 
 const deletUser = asyncHandler(async(req,res)=>{
   const user = await User.findById(req.params.id)
@@ -155,5 +160,6 @@ module.exports = {
   deletUser,
   getUser,
   generateToken,
-  getAllUsers
+  getAllUsers,
+  getAdmins
 };
