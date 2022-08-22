@@ -18,13 +18,13 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
   console.log("email", email);
   if (!name || !email || !password) {
-   return res.sendStatus (400);
+   return res.status (400);
     throw new Error("please add all fields");
   }
   //if user exist
   const userExists = await User.findOne({ email });
   if (userExists) {
-   return res.sendStatus(400);
+   return res.status(400);
     throw new Error(" User already exists");
   }
   // hash password
@@ -52,14 +52,14 @@ const registerUser = asyncHandler(async (req, res) => {
           console.log('Eamil sent !!!!')
         }
       })
-   return res.sendStatus(201).json({
+   return res.status(201).json({
       _id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
     })
   } else {
-  return  res.sendStatus(400);
+  return  res.status(400);
     throw new Error("INvalid user data ");
   }
   res.json({ message: "register user" });
@@ -80,7 +80,7 @@ const loginUser = asyncHandler(async (req, res) => {
     });
     console.log(token);
   } else {
-  return  res.sendStatus(400);
+  return  res.status(400);
     throw new Error("INvalid user data ");
   }
 
@@ -91,7 +91,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const getMe = asyncHandler(async (req, res) => {
   const { _id, name, email, role } = await User.findById(req.user.id);
-  res.sendStatus(200).json({
+  res.status(200).json({
     id: _id,
     name,
     email,
@@ -106,13 +106,13 @@ const updateUser = asyncHandler(async(req,res)=>{
   const user = await User.findById(req.params.id)
 
   if (!user){
-      res.sendStatus(404)
+      res.status(404)
       throw new Error('user not found')
   }
   const updateUser = await User.findByIdAndUpdate(req.params.id, req.body,{
       new: true,
   })
- return res.sendStatus(200).json(updateUser)
+ return res.status(200).json(updateUser)
 }
 );
 
@@ -131,18 +131,18 @@ const deletUser = asyncHandler(async(req,res)=>{
   const user = await User.findById(req.params.id)
  
   if (!user){
-     return res.sendStatus(404)
+     return res.status(404)
       throw new Error('User not found')
   }
   await user.remove()
-  res.sendStatus(200).json({id: req.params.id})
+  res.status(200).json({id: req.params.id})
 });
 // @desc get project
 // @route get /api/project
 // @access private
 const getUser = asyncHandler(async (req,res)=>{
   const user = await User.find({user: req.user.id})
-  return  res.sendStatus(200).json(user)
+  return  res.status(200).json(user)
 }
 )
 //generate JWT
