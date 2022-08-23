@@ -27,7 +27,7 @@ const addTask = asyncHandler(async(req,res)=>{
         developer: req.body.developer,
         user: req.user.id
     })
-    res.status(201).json(task)
+    return res.status(201).json(task)
 })
 
 // @desc update task
