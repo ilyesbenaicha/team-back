@@ -27,7 +27,7 @@ const projectSchema = mongoose.Schema({
         type: String,
         required: true
     }],
- userId:{
+    userId:{
        type : mongoose.Schema.Types.ObjectId,
       ref: 'User'
    },
