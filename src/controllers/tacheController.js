@@ -30,6 +30,7 @@ const addTask = asyncHandler(async(req,res)=>{
             duration: req.body.duration,
             technology: req.body.technology,
             developer: req.body.developer,
+            etat : req.body.etat,
             user: req.user.id
         })
         return res.status(201).json(task)
@@ -42,13 +43,13 @@ const addTask = asyncHandler(async(req,res)=>{
 // @route update /api/task
 // @access private
 const updateTask = asyncHandler(async(req,res)=>{
-    const task = await Task.findById(req.params.id)
+    const task = await Task.find({title:req.params.id})
 
     if (!task){
         res.status(404)
         throw new Error('task not found')
     }
-    const updatedtask = await Task.findByIdAndUpdate(req.params.id, req.body,{
+    const updatedtask = await Task.findOneAndUpdate({title:req.params.id}, req.body,{
         new: true,
     })
     res.status(200).json(updatedtask)

@@ -13,11 +13,11 @@ const tacheSchema = mongoose.Schema({
     },
     start_date:{
         type: Date,
-       required:[true, 'please add a Date']
+      // required:[true, 'please add a Date']
     },
     end_date:{
         type: Date,
-        required:[true, 'please add a Date']
+      //  required:[true, 'please add a Date']
     },
     etat:{
         type: String,
