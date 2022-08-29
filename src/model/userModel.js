@@ -26,6 +26,9 @@ const userSchema = mongoose.Schema(
     addresse : {
       type : String
     },
+    department :{
+      type:String
+    },
   },
   {
     timestamps: true
