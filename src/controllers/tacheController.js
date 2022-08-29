@@ -4,43 +4,52 @@ const Task = require('../model/taskModel')
 // @route get /api/Task
 // @access private
 const getTask = asyncHandler(async (req,res)=>{
-    const task = await Task.find({user: req.user.id})
-    res.status(200).json(project)
+    try {
+    const task = await Task.findById({user: req.user.id}).sort({date: -1})
+    res.status(200).json(task)
+    }catch(error){
+        res.status(500).send("Error: "+error.message);
+    }
 }
 )
 
  
-// @desc set project
-// @route set /api/project
+// @desc set task
+// @route set /api/task
 // @access private
 const addTask = asyncHandler(async(req,res)=>{
-    if (!req.body.title && !req.body.description ) {
-        res.status(400)
-        throw new Error('please add a title')
+    try {
+        if (!req.body.title && !req.body.description ) {
+            res.status(400)
+            throw new Error('please add a title')
+        }
+    
+        const task = await Task.create({
+            title: req.body.title,
+            description: req.body.description,
+            duration: req.body.duration,
+            technology: req.body.technology,
+            developer: req.body.developer,
+            etat : req.body.etat,
+            user: req.user.id
+        })
+        return res.status(201).json(task)
+  
+    } catch (error) {
+        res.status(500).send(error.message);
     }
-
-    const task = await Task.create({
-        title: req.body.title,
-        description: req.body.description,
-        duration: req.body.duration,
-        technology: req.body.technology,
-        developer: req.body.developer,
-        user: req.user.id
-    })
-    res.status(201).json(task)
 })
-
 // @desc update task
 // @route update /api/task
 // @access private
 const updateTask = asyncHandler(async(req,res)=>{
-    const task = await Task.findById(req.params.id)
+    const task = await Task.find({title:req.params.id})
 
     if (!task){
         res.status(404)
         throw new Error('task not found')
     }
-    const updatedtask = await Task.findByIdAndUpdate(req.params.id, req.body,{
+    const updatedtask = await Task.findById({title:req.params.id}, req.body,{
         new: true,
     })
     res.status(200).json(updatedtask)

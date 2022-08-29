@@ -13,15 +13,15 @@ const tacheSchema = mongoose.Schema({
     },
     start_date:{
         type: Date,
-        required:[true, 'please add a Date']
+      // required:[true, 'please add a Date']
     },
     end_date:{
         type: Date,
-        required:[true, 'please add a Date']
+      //  required:[true, 'please add a Date']
     },
     etat:{
         type: String,
-        enum:['started','finished','verified']
+        enum:['Do_it','In_Progress','Awaiting_review','Done']
     },
     employerId:{
         type : mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,8 @@ const tacheSchema = mongoose.Schema({
     projectId:{
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Project'
-    }
+    },
+    
 }, {
     timestamps: true
 })
