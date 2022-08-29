@@ -11,7 +11,11 @@ const projectSchema = mongoose.Schema({
         required:[true, 'please add an description'],
        
     },
-    duration:{
+    Start_date:{
+        type: Date,
+        required:[true, 'please add a duration']
+    },
+    End_date:{
         type: Date,
         required:[true, 'please add a duration']
     },
@@ -19,11 +23,11 @@ const projectSchema = mongoose.Schema({
         type: String,
         required:[true, 'please add a technology']
     },
-    developer:{
+    developer:[{
         type: String,
         required: true
-    },
- userId:{
+    }],
+    userId:{
        type : mongoose.Schema.Types.ObjectId,
       ref: 'User'
    },

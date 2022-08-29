@@ -16,7 +16,19 @@ const userSchema = mongoose.Schema(
     name: {
       type: String,
       required: true
-    }
+    },
+    last_name : {
+      type: String,
+    },
+    tel : {
+      type : Number,
+    },
+    addresse : {
+      type : String
+    },
+    department :{
+      type:String
+    },
   },
   {
     timestamps: true
