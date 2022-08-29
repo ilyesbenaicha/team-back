@@ -5,11 +5,10 @@ const Task = require('../model/taskModel')
 // @access private
 const getTask = asyncHandler(async (req,res)=>{
     try {
-<<<<<<< HEAD
-    const task = await Task.findById({user: req.user.id}).sort({date: -1})
-=======
+
+
     const task = await Task.find({user: req.user.id}).sort({date: -1})
->>>>>>> a60b8bb12b69ee036b7ce7bf45838e5737a5943e
+
     res.status(200).json(task)
     }catch(error){
         res.status(500).send("Error: "+error.message);
@@ -53,11 +52,9 @@ const updateTask = asyncHandler(async(req,res)=>{
         res.status(404)
         throw new Error('task not found')
     }
-<<<<<<< HEAD
+
     const updatedtask = await Task.findById({title:req.params.id}, req.body,{
-=======
-    const updatedtask = await Task.findOneAndUpdate({title:req.params.id}, req.body,{
->>>>>>> a60b8bb12b69ee036b7ce7bf45838e5737a5943e
+
         new: true,
     })
     res.status(200).json(updatedtask)
