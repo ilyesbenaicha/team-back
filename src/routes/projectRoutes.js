@@ -1,7 +1,7 @@
 const express= require('express')
 const router = express.Router()
  const {getproject,addproject,deletproject,updateproject} = require('../controllers/ProjectController');
-const IssuperAdmin = require('../middleware/superAdminMiddleware');
+const IssuperAdmin = require('../middleware/superAdminMiddleware').default;
  const { protect } = require("../middleware/authMiddleware");
 
 router.route('/').get(protect,getproject).post(protect,IssuperAdmin,addproject)

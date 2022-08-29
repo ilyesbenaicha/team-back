@@ -4,4 +4,4 @@ const IssuperAdmin = async(req,res,next) => {
    return res.status(401).json({msg:'no '})
 
 }
-module.exports = IssuperAdmin
+export default IssuperAdmin
