@@ -21,11 +21,7 @@ const tacheSchema = mongoose.Schema({
     },
     etat:{
         type: String,
-<<<<<<< HEAD
         enum:['Do it','In Progress','Awaiting review','Done']
-=======
-        enum:['Do_it','In_Progress','Awaiting_review','Done']
->>>>>>> release/v0.0.1
     },
     employerId:{
         type : mongoose.Schema.Types.ObjectId,
