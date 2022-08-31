@@ -10,14 +10,15 @@ auth:{
   user: 'team37240@gmail.com',
   pass: 'iausjhxxwakezztf'
 }, port: 465,host : 'smtp.gmail.com'});
+
 // @desc register new user
 // @route Post /api/user
 //@access Public
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { email, role,first_name,last_name,tel,addresse,department} = req.body;
   console.log("email", email);
-  if (!name || !email || !password) {
+  if (!role || !email) {
    return res.status (400);
     throw new Error("please add all fields");
   }
@@ -28,15 +29,19 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error(" User already exists");
   }
   // hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  console.log("hash", hashedPassword);
+  // const salt = await bcrypt.genSalt(10);
+  // const hashedPassword = await bcrypt.hash(password, salt);
+  // console.log("hash", hashedPassword);
   // Create user
   const user = await User.create({
     email,
-    role,
-    name,
-    password: hashedPassword
+     role,
+     first_name,
+     last_name,
+     tel,
+     addresse,
+     department,
+    //password: hashedPassword
   });
   if (user) {
       console.log(user)
