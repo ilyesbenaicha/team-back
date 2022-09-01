@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
 const nodemailer = require("nodemailer")
-
+var generator = require('generate-password');
 let transporter = nodemailer.createTransport({service:'gmail',
 auth:{
   user: 'team37240@gmail.com',
@@ -29,9 +29,14 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error(" User already exists");
   }
   // hash password
-  // const salt = await bcrypt.genSalt(10);
-  // const hashedPassword = await bcrypt.hash(password, salt);
-  // console.log("hash", hashedPassword);
+  var password = generator.generate({
+    length: 10,
+    numbers: true
+  });
+  console.log(password);
+   const salt = await bcrypt.genSalt(10);
+   const hashedPassword = await bcrypt.hash(password, salt);
+  console.log("hash", hashedPassword);
   // Create user
   const user = await User.create({
     email,
@@ -41,7 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
      tel,
      addresse,
      department,
-    //password: hashedPassword
+    password: hashedPassword
   });
   if (user) {
       console.log(user)
@@ -49,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
         from : 'team37240@gmail.com',
         to : user.email,
         subject : 'testing and testing',
-        text : 'it works'
+        text : `hi ${user.email} this is your password ${password}`
       }, function(err,data){
         if (err) {
           console.log('error Occurs',err);
@@ -122,7 +127,7 @@ const updateUser = asyncHandler(async(req,res)=>{
 );
 
 const getAllUsers = asyncHandler(async (req,res)=>{
-  const user = await User.find()
+  const user = await User.find({$or:[{"role": "Admin"},{"role": "Employer"}]})
   res.status(200).json(user)
 }
 )
@@ -133,7 +138,7 @@ const getAdmins = asyncHandler(async (req,res)=>{
 )
 
 const deletUser = asyncHandler(async(req,res)=>{
-  const user = await User.findById(req.params.id)
+  const user = await User.findByIdAndDelete(req.params.id.trim())
  
   if (!user){
      return res.status(404)

@@ -55,6 +55,19 @@ const updateTask = asyncHandler(async(req,res)=>{
     res.status(200).json(updatedtask)
 }
 )
+const updateTaskByName = asyncHandler(async(req,res)=>{
+    const task = await Task.find({title:req.params.title})
+
+    if (!task){
+        res.status(404)
+        throw new Error('task not found')
+    }
+    const updateTaskByName = await Task.findOneAndUpdate({title:req.params.title}, req.body,{
+        new: true,
+    })
+    res.status(200).json(updateTaskByName)
+}
+)
 // @desc delete task
 // @route delete /api/task
 // @access private
@@ -73,5 +86,6 @@ module.exports={
     getTask,
     addTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    updateTaskByName
 }
