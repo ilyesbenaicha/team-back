@@ -9,11 +9,11 @@ const userSchema = mongoose.Schema(
       type: String,
       enum: ["SuperAdmin", "Admin", "Employer"]
     },
-    password: {
-      type: String,
-      required: true
-    },
-    name: {
+     password: {
+       type: String,
+       required: true
+     },
+    first_name: {
       type: String,
       required: true
     },

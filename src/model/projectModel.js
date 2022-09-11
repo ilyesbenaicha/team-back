@@ -19,7 +19,10 @@ const projectSchema = mongoose.Schema({
         type: Date,
         required:[true, 'please add a duration']
     },
+    // new shcema
+    
     technology:{
+        // type:[mongoose.Types.ObjectId]
         type: String,
         required:[true, 'please add a technology']
     },

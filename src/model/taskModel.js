@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const tacheSchema = mongoose.Schema({
     title:{
         type: String,
-        required : [true, 'please add your title']
+        required : [true, 'please add your title'],
+        unique:true
     },
     
     description:{
@@ -23,11 +24,11 @@ const tacheSchema = mongoose.Schema({
         type: String,
         enum:['Do it','In Progress','Awaiting review','Done']
     },
-    employerId:{
+    user:{
         type : mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'user'
     },
-    projectId:{
+    Project:{
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },

@@ -4,20 +4,21 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
 const nodemailer = require("nodemailer")
-
+var generator = require('generate-password');
 let transporter = nodemailer.createTransport({service:'gmail',
 auth:{
   user: 'team37240@gmail.com',
   pass: 'iausjhxxwakezztf'
 }, port: 465,host : 'smtp.gmail.com'});
+
 // @desc register new user
 // @route Post /api/user
 //@access Public
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { email, role,first_name,last_name,tel,addresse,department} = req.body;
   console.log("email", email);
-  if (!name || !email || !password) {
+  if (!role || !email) {
    return res.status (400);
     throw new Error("please add all fields");
   }
@@ -28,14 +29,23 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error(" User already exists");
   }
   // hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  var password = generator.generate({
+    length: 10,
+    numbers: true
+  });
+  console.log(password);
+   const salt = await bcrypt.genSalt(10);
+   const hashedPassword = await bcrypt.hash(password, salt);
   console.log("hash", hashedPassword);
   // Create user
   const user = await User.create({
     email,
-    role,
-    name,
+     role,
+     first_name,
+     last_name,
+     tel,
+     addresse,
+     department,
     password: hashedPassword
   });
   if (user) {
@@ -44,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
         from : 'team37240@gmail.com',
         to : user.email,
         subject : 'testing and testing',
-        text : 'it works'
+        text : `hi ${user.email} this is your password ${password}`
       }, function(err,data){
         if (err) {
           console.log('error Occurs',err);
@@ -117,7 +127,7 @@ const updateUser = asyncHandler(async(req,res)=>{
 );
 
 const getAllUsers = asyncHandler(async (req,res)=>{
-  const user = await User.find()
+  const user = await User.find({$or:[{"role": "Admin"},{"role": "Employer"}]})
   res.status(200).json(user)
 }
 )
@@ -126,9 +136,14 @@ const getAdmins = asyncHandler(async (req,res)=>{
   res.status(200).json(user)
 }
 )
+const getEmployer = asyncHandler(async (req,res)=>{
+  const user = await User.find({ "role": "Employer" } )
+  res.status(200).json(user)
+}
+)
 
 const deletUser = asyncHandler(async(req,res)=>{
-  const user = await User.findById(req.params.id)
+  const user = await User.findByIdAndDelete(req.params.id.trim())
  
   if (!user){
      return res.status(404)
@@ -161,5 +176,6 @@ module.exports = {
   getUser,
   generateToken,
   getAllUsers,
-  getAdmins
+  getAdmins,
+  getEmployer
 };
