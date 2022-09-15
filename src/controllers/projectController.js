@@ -1,5 +1,12 @@
 const asyncHandler = require('express-async-handler')
 const Project = require('../model/projectModel')
+const nodemailer = require("nodemailer")
+
+let transporter = nodemailer.createTransport({service:'gmail',
+auth:{
+  user: 'team37240@gmail.com',
+  pass: 'iausjhxxwakezztf'
+}, port: 465,host : 'smtp.gmail.com'});
 // @desc get project
 // @route get /api/project
 // @access private
@@ -22,11 +29,24 @@ const addproject = asyncHandler(async(req,res)=>{
     const project = await project.create({
         title: req.body.title,
         description: req.body.description,
-        duration: req.body.duration,
-        technology: req.body.technology,
-        developer: req.body.developer,
-        user: req.user.id
-    })
+        Start_date: req.body.Start_date,
+        End_date: req.body.End_date,
+        user: req.body.user,
+    });
+    if (project){
+        console.log(project)
+        transporter.sendMail({
+            from : 'team37240@gmail.com',
+            to:project.user,
+            subject : 'Project description',
+            text : `hi ${project.user} this is the description of the project ${project.description}`
+        }, function(err,data){
+            if (err) {
+              console.log('error Occurs',err);
+            } else {
+              console.log('Eamil sent !!!!')
+            }})
+    }
     res.status(201).json(project)
 })
 

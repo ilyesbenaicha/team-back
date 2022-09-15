@@ -21,19 +21,15 @@ const projectSchema = mongoose.Schema({
     },
     // new shcema
     
-    technology:{
-        // type:[mongoose.Types.ObjectId]
-        type: String,
-        required:[true, 'please add a technology']
+    // technology:{
+    //     // type:[mongoose.Types.ObjectId]
+    //     type: String,
+    //     required:[true, 'please add a technology']
+    // },
+  user:{
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'user'
     },
-    developer:[{
-        type: String,
-        required: true
-    }],
-    userId:{
-       type : mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-   },
     archive:{
         type:Boolean,
         default:false

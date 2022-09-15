@@ -20,13 +20,11 @@ const registerUser = asyncHandler(async (req, res) => {
   console.log("email", email);
   if (!role || !email) {
    return res.status (400);
-    throw new Error("please add all fields");
   }
   //if user exist
   const userExists = await User.findOne({ email });
   if (userExists) {
    return res.status(400);
-    throw new Error(" User already exists");
   }
   // hash password
   var password = generator.generate({
@@ -67,12 +65,14 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      addresse: user.addresse,
+      tel: user.tel,
+      department: user.department
+
     })
   } else {
   return  res.status(400);
-    throw new Error("INvalid user data ");
   }
-  res.json({ message: "register user" });
 });
 // @desc Authenticate auser
 // @route Post /api/user/Login
@@ -91,12 +91,11 @@ const loginUser = asyncHandler(async (req, res) => {
     console.log(token);
   } else {
   return  res.status(400);
-    throw new Error("INvalid user data ");
   }
 
   res.json({ message: "Login User" });
 });
-// @desc register new user  
+// @desc getMe  
 //@access Public
 
 const getMe = asyncHandler(async (req, res) => {
@@ -147,7 +146,6 @@ const deletUser = asyncHandler(async(req,res)=>{
  
   if (!user){
      return res.status(404)
-      throw new Error('User not found')
   }
   await user.remove()
   res.status(200).json({id: req.params.id})

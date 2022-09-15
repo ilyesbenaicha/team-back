@@ -42,7 +42,7 @@ const addTask = asyncHandler(async(req,res)=>{
             end_date: req.body.end_date,
             user: req.body.user,
             etat : req.body.etat,
-            Project: req.Project,
+            Project: req.body.Project,
         })
         return res.status(201).json(task)
   
