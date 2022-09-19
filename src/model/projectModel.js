@@ -13,11 +13,11 @@ const projectSchema = mongoose.Schema({
     },
     Start_date:{
         type: Date,
-        required:[true, 'please add a duration']
+      //  required:[true, 'please add a duration']
     },
     End_date:{
         type: Date,
-        required:[true, 'please add a duration']
+        //required:[true, 'please add a duration']
     },
     // new shcema
     

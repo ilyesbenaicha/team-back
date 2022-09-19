@@ -11,7 +11,7 @@ auth:{
 // @route get /api/project
 // @access private
 const getproject = asyncHandler(async (req,res)=>{
-    const project = await Project.find({user: req.user.id})
+    const project = await Project.find({user: req.user.id}).populate('user')
     res.status(200).json(project)
 }
 )

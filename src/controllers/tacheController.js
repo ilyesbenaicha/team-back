@@ -6,7 +6,17 @@ const Task = require('../model/taskModel')
 const getTask = asyncHandler(async (req,res)=>{
     try {
         //  Task.findById({user: req.user.id})
-    const task = await Task.find().sort({date: -1})
+    const task = await Task.find().sort({date: -1}).populate('user')
+    res.status(200).json(task)
+    }catch(error){
+        res.status(500).send("Error: "+error.message);
+    }
+}
+)
+const getTaskByUser = asyncHandler(async (req,res)=>{
+    try {
+        // const Task.findById({user: req.user.id})
+    const task = await Task.findById({user:req.params.id}).sort({date: -1})
     res.status(200).json(task)
     }catch(error){
         res.status(500).send("Error: "+error.message);
@@ -92,11 +102,32 @@ const deleteTask = asyncHandler(async(req,res)=>{
     await Task.remove()
     res.status(200).json({id: req.params.id})
 })
-
+const getTaskBystatus = asyncHandler(async(req,res)=>{
+    try {
+        const task = await Task.aggregate(
+            [
+                {
+                   $group:{
+                        _id: "$Task.user",
+                        total: {$sum: 1}
+                    }
+                    
+                }
+            ]
+        )
+        console.log(Task.status);
+        res.status(200).send(task)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
 module.exports={
     getTask,
     addTask,
     updateTask,
     deleteTask,
-    updateTaskByName
+    updateTaskByName,
+    getTaskBystatus,
+    getTaskByUser
 }
