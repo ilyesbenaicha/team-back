@@ -48,8 +48,8 @@ const addTask = asyncHandler(async(req,res)=>{
         const task = await Task.create({
             title: req.body.title,
             description: req.body.description,
-            start_date: req.body.start_date,
-            end_date: req.body.end_date,
+            start_date: new Date( req.body.start_date).toString(),
+            end_date: new Date(req.body.end_date).toString(),
             user: req.body.user,
             etat : req.body.etat,
             Project: req.body.Project,

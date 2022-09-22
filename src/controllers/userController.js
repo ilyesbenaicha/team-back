@@ -51,8 +51,9 @@ const registerUser = asyncHandler(async (req, res) => {
       transporter.sendMail({
         from : 'team37240@gmail.com',
         to : user.email,
-        subject : 'testing and testing',
-        text : `hi ${user.email} this is your password ${password}`
+        subject : 'validation ',
+        text : `${user.email}  Welcome to our company! We're so excited to have you as part of our team  
+        !! this is your password ${password}`
       }, function(err,data){
         if (err) {
           console.log('error Occurs',err);
@@ -131,7 +132,7 @@ const getAllUsers = asyncHandler(async (req,res)=>{
 }
 )
 const getAdmins = asyncHandler(async (req,res)=>{
-  const user = await User.find({ "role": "Admin" } )
+  const user = await User.find({ "role": "Admin" } ).populate('email')
   res.status(200).json(user)
 }
 )

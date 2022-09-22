@@ -19,6 +19,7 @@
     "express": "^4.17.3",
     "express-async-handler": "^1.2.0",
     "generate-password": "^1.7.0",
+    "handlebars": "^4.7.7",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.1",
     "mongoose-data-seed": "^2.1.6",
