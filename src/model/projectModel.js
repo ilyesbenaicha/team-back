@@ -28,6 +28,6 @@ const projectSchema = mongoose.Schema({
         default:false
     }
 }, {
-    timestamps: true
+    timestamps: {createdAt: 'created_at'}
 })
 module.exports = mongoose.model('Project',projectSchema)

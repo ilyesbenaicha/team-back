@@ -33,8 +33,6 @@ const getTaskByemp = asyncHandler(async (req,res)=>{
     }
 }
 )
-
- 
 // @desc set task
 // @route set /api/task
 // @access private
@@ -44,12 +42,11 @@ const addTask = asyncHandler(async(req,res)=>{
             res.status(400)
             throw new Error('please add a title')
         }
-    
-        const task = await Task.create({
+       const task = await Task.create({
             title: req.body.title,
             description: req.body.description,
-            start_date: new Date( req.body.start_date).toString(),
-            end_date: new Date(req.body.end_date).toString(),
+            start_date: new Date( req.body.start_date),
+            end_date: new Date(req.body.end_date),
             user: req.body.user,
             etat : req.body.etat,
             Project: req.body.Project,
@@ -58,6 +55,7 @@ const addTask = asyncHandler(async(req,res)=>{
   
     } catch (error) {
         res.status(500).send(error.message);
+        console.log("err task",error);
     }
 })
 // @desc update task
