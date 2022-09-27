@@ -13,6 +13,16 @@ const getTask = asyncHandler(async (req,res)=>{
     }
 }
 )
+const getTaskDone = asyncHandler(async (req,res)=>{
+    try {
+        //  Task.findById({user: req.user.id})
+    const task = await Task.find({ "etat": "Done" }).sort({date: -1}).populate('user')
+    res.status(200).json(task)
+    }catch(error){
+        res.status(500).send("Error: "+error.message);
+    }
+}
+)
 const getTaskByUser = asyncHandler(async (req,res)=>{
     try {
         // const Task.findById({user: req.user.id})
@@ -42,15 +52,20 @@ const addTask = asyncHandler(async(req,res)=>{
             res.status(400)
             throw new Error('please add a title')
         }
+        sDate =new Date (req.body.start_date)
+        eDate = new Date (req.body.end)
        const task = await Task.create({
             title: req.body.title,
             description: req.body.description,
-            start_date: new Date( req.body.start_date),
-            end_date: new Date(req.body.end_date),
+            start_date:(req.body.start_date).toISOString() ,  
+            end_date:(req.body.end_date).toISOString() ,
             user: req.body.user,
             etat : req.body.etat,
-            Project: req.body.Project,
+            project: req.body.project,
         })
+        console.log("project id",project);
+        console.log("start date ",start_date);
+        console.log("end d ate",end_date);
         return res.status(201).json(task)
   
     } catch (error) {
@@ -127,5 +142,6 @@ module.exports={
     deleteTask,
     updateTaskByName,
     getTaskBystatus,
-    getTaskByUser
+    getTaskByUser,
+    getTaskDone
 }

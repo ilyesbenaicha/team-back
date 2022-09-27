@@ -28,7 +28,7 @@ const tacheSchema = mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    Project:{
+    project:{
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },

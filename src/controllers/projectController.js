@@ -18,9 +18,6 @@ const getproject = asyncHandler(async (req,res)=>{
 )
 const getprojectByuser = asyncHandler(async (req,res)=>{
     const project = await Project.find({user:req.params.user})
-    
-    console.log("id of user ",req.params.user);
-    console.log("project of user",project);
     res.status(200).json(project)
 }
 )
