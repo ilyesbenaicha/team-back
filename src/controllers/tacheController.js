@@ -33,6 +33,17 @@ const getTaskByUser = asyncHandler(async (req,res)=>{
     }
 }
 )
+const getTaskByProject = asyncHandler(async (req,res)=>{
+    try {
+        // const Task.findById({user: req.user.id})
+    const task = await Task.find({project:req.params.id}).sort({date: -1})
+    res.status(200).json(task)
+    }catch(error){
+        res.status(500).send("Error: "+error.message);
+        res.status(404).send ("not found task for this project " +error.message);
+    }
+}
+)
 const getTaskByemp = asyncHandler(async (req,res)=>{
     try {
           Task.findById({user: req.user.id})
@@ -143,5 +154,6 @@ module.exports={
     updateTaskByName,
     getTaskBystatus,
     getTaskByUser,
-    getTaskDone
+    getTaskDone,
+    getTaskByProject
 }

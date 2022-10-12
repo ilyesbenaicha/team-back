@@ -14,7 +14,7 @@ auth:{
 // @desc register new user
 // @route Post /api/user
 //@access Public
-
+const url = "http://localhost:3000/reset" ;
 const registerUser = asyncHandler(async (req, res) => {
   const { email, role,first_name,last_name,tel,addresse,department} = req.body;
   console.log("email", email);
@@ -52,8 +52,9 @@ const registerUser = asyncHandler(async (req, res) => {
         from : 'team37240@gmail.com',
         to : user.email,
         subject : 'validation ',
-        text : `${user.email}  Welcome to our company! We're so excited to have you as part of our team  
-        !! this is your password ${password}`
+        html :  '<h3>Dear User </h3><p>  Welcome to our company! Were so excited to have you as part of our team You have requested to Reset your password. To Reset your password Successfully, Follow the Link bellow to Reset it</p><p>Click her<a href="http://localhost:3000/reset"></a></p><p>This Email is subject to mandatory instruction.</p><p>Regards,</p><p>Online Service</p>'
+       // text : `${user.email}  Welcome to our company! We're so excited to have you as part of our team  
+       // !! this is your password ${password} link: ${url}`
       }, function(err,data){
         if (err) {
           console.log('error Occurs',err);
@@ -95,6 +96,24 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   res.json({ message: "Login User" });
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  //check for user email
+  const user = await User.findOne({ email });
+  if(!user){
+    res.status(404)
+    throw new Error('user not found')
+  }else {
+   
+    user.password = password;
+     user.save()
+   
+    
+  }
+return res.status(200).json(updateUser)
 });
 // @desc getMe  
 //@access Public
@@ -159,6 +178,7 @@ const getUser = asyncHandler(async (req,res)=>{
   return  res.status(200).json(user)
 }
 )
+
 //generate JWT
 const generateToken = ( id, email, role,first_name) => {
   return jwt.sign({ id, email , role,first_name }, process.env.JWT_SECRET, {
@@ -176,5 +196,6 @@ module.exports = {
   generateToken,
   getAllUsers,
   getAdmins,
-  getEmployer
+  getEmployer,
+  resetPassword,
 };
