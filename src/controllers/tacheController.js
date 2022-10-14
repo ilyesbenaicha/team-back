@@ -6,7 +6,7 @@ const Task = require('../model/taskModel')
 const getTask = asyncHandler(async (req,res)=>{
     try {
         //  Task.findById({user: req.user.id})
-    const task = await Task.find().sort({date: -1}).populate('user')
+    const task = await Task.find().sort({date: -1}).populate('project','description')
     res.status(200).json(task)
     }catch(error){
         res.status(500).send("Error: "+error.message);
@@ -63,13 +63,12 @@ const addTask = asyncHandler(async(req,res)=>{
             res.status(400)
             throw new Error('please add a title')
         }
-        sDate =new Date (req.body.start_date)
-        eDate = new Date (req.body.end)
+       
        const task = await Task.create({
             title: req.body.title,
             description: req.body.description,
-            start_date:(req.body.start_date).toISOString() ,  
-            end_date:(req.body.end_date).toISOString() ,
+            start_date:(req.body.start_date) ,  
+            end_date:(req.body.end_date) ,
             user: req.body.user,
             etat : req.body.etat,
             project: req.body.project,
