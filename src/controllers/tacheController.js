@@ -67,15 +67,13 @@ const addTask = asyncHandler(async(req,res)=>{
        const task = await Task.create({
             title: req.body.title,
             description: req.body.description,
-            start_date:(req.body.start_date) ,  
-            end_date:(req.body.end_date) ,
+            start_date:req.body.start_date ,  
+            end_date:req.body.end_date ,
             user: req.body.user,
             etat : req.body.etat,
             project: req.body.project,
         })
-        console.log("project id",project);
-        console.log("start date ",start_date);
-        console.log("end d ate",end_date);
+      
         return res.status(201).json(task)
   
     } catch (error) {
