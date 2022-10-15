@@ -1,6 +1,6 @@
 const express= require('express')
 const router = express.Router()
- const {} = require('../controllers/ProjectController');
+ const {} = require('../controllers/projectController');
 const { getTask, addTask, updateTask, deleteTask,updateTaskByName, getTaskBystatus, getTaskByUser, getTaskDone,getTaskByProject } = require('../controllers/tacheController');
 const IssuperAdmin = require('../middleware/superAdminMiddleware');
 const adminMiddleware = require('../middleware/superAdminMiddleware');
