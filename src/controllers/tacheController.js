@@ -6,7 +6,7 @@ const Task = require('../model/taskModel')
 const getTask = asyncHandler(async (req,res)=>{
     try {
         //  Task.findById({user: req.user.id})
-    const task = await Task.find().sort({date: -1}).populate('project','description')
+    const task = await Task.find().sort({date: -1}).populate('project','title description' ).populate('user','first_name last_name')
     res.status(200).json(task)
     }catch(error){
         res.status(500).send("Error: "+error.message);
