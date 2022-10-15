@@ -6,9 +6,9 @@ const salt = bcrypt.genSaltSync(10);
 
 const data = [
     {
-      email: 'admin@admni.com',
+      email: 'team37240@gmail.com',
       role: "SuperAdmin",
-      password: bcrypt.hashSync("admin", salt),
+      password: bcrypt.hashSync("superadmin", salt),
       name: "admin"
     },
 ];
