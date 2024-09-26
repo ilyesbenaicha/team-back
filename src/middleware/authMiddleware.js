@@ -6,7 +6,7 @@
      if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
          try {
              //get token from header
-            token = req.headers?.authorization?.split(' ')[1]
+            token = req.headers.authorization.split(' ')[1]
              console.log('token',token);
              // verify token 
              const decoded = jwt.verify(token, process.env.JWT_SECRET)  
@@ -17,7 +17,7 @@
          } catch (error) {
              console.log(error);
              res.status(401)
-             throw new Error('NOt authorized')
+             throw new Error('you are not authrized')
          }
      }
      if (!token) {

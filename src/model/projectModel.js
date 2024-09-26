@@ -13,29 +13,21 @@ const projectSchema = mongoose.Schema({
     },
     Start_date:{
         type: Date,
-        required:[true, 'please add a duration']
+      //  required:[true, 'please add a duration']
     },
     End_date:{
         type: Date,
-        required:[true, 'please add a duration']
+        //required:[true, 'please add a duration']
     },
-    technology:{
-        type: String,
-        required:[true, 'please add a technology']
+    user:{
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'user'
     },
-    developer:[{
-        type: String,
-        required: true
-    }],
-    userId:{
-       type : mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-   },
     archive:{
         type:Boolean,
         default:false
     }
 }, {
-    timestamps: true
+    timestamps: {createdAt: 'created_at'}
 })
 module.exports = mongoose.model('Project',projectSchema)
