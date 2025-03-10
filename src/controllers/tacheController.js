@@ -1,156 +1,196 @@
-const asyncHandler = require('express-async-handler')
-const Task = require('../model/taskModel')
-// @desc get Task
-// @route get /api/Task
-// @access private
-const getTask = asyncHandler(async (req,res)=>{
-    try {
-        //  Task.findById({user: req.user.id})
-    const task = await Task.find().sort({date: -1}).populate('project','title description' ).populate('user','first_name last_name')
-    res.status(200).json(task)
-    }catch(error){
-        res.status(500).send("Error: "+error.message);
-    }
-}
-)
-const getTaskDone = asyncHandler(async (req,res)=>{
-    try {
-        //  Task.findById({user: req.user.id})
-    const task = await Task.find({ "etat": "Done" }).sort({date: -1}).populate('user')
-    res.status(200).json(task)
-    }catch(error){
-        res.status(500).send("Error: "+error.message);
-    }
-}
-)
-const getTaskByUser = asyncHandler(async (req,res)=>{
-    try {
-        // const Task.findById({user: req.user.id})
-    const task = await Task.findById({user:req.params.id}).sort({date: -1})
-    res.status(200).json(task)
-    }catch(error){
-        res.status(500).send("Error: "+error.message);
-    }
-}
-)
-const getTaskByProject = asyncHandler(async (req,res)=>{
-    try {
-        // const Task.findById({user: req.user.id})
-    const task = await Task.find({project:req.params.id}).sort({date: -1})
-    res.status(200).json(task)
-    }catch(error){
-        res.status(500).send("Error: "+error.message);
-        res.status(404).send ("not found task for this project " +error.message);
-    }
-}
-)
-const getTaskByemp = asyncHandler(async (req,res)=>{
-    try {
-          Task.findById({user: req.user.id})
-    const task = await Task.find().sort({date: -1})
-    res.status(200).json(task)
-    }catch(error){
-        res.status(500).send("Error: "+error.message);
-    }
-}
-)
-// @desc set task
-// @route set /api/task
-// @access private
-const addTask = asyncHandler(async(req,res)=>{
-    try {
-        if (!req.body.title && !req.body.description ) {
-            res.status(400)
-            throw new Error('please add a title')
-        }
-       
-       const task = await Task.create({
-            title: req.body.title,
-            description: req.body.description,
-            start_date:req.body.start_date ,  
-            end_date:req.body.end_date ,
-            user: req.body.user,
-            etat : req.body.etat,
-            project: req.body.project,
-        })
-      
-        return res.status(201).json(task)
-  
-    } catch (error) {
-        res.status(500).send(error.message);
-        console.log("err task",error);
-    }
-})
-// @desc update task
-// @route update /api/task
-// @access private
-const updateTask = asyncHandler(async(req,res)=>{
-    const task = await Task.find({title:req.params.id})
+const asyncHandler = require('express-async-handler');
+const Task = require('../model/taskModel');
 
-    if (!task){
-        res.status(404)
-        throw new Error('task not found')
-    }
-    const updatedtask = await Task.findById({title:req.params.id}, req.body,{
-        new: true,
-    })
-    res.status(200).json(updatedtask)
-}
-)
-const updateTaskByName = asyncHandler(async(req,res)=>{
-    const task = await Task.find({title:req.params.title})
+// Utility function to handle errors
+const handleError = (res, statusCode, message, error) => {
+  console.error(message, error);
+  res.status(statusCode).json({ message, error: error.message });
+};
 
-    if (!task){
-        res.status(404)
-        throw new Error('task not found')
-    }
-    const updateTaskByName = await Task.findOneAndUpdate({title:req.params.title}, {...req.body},{
-        new: true,
-    })
-    res.status(200).json(updateTaskByName)
-}
-)
-// @desc delete task
-// @route delete /api/task
-// @access private
-const deleteTask = asyncHandler(async(req,res)=>{
-    const task = await Task.findById(req.params.id)
+// @desc Get all tasks
+// @route GET /api/task
+// @access Private
+const getTasks = asyncHandler(async (req, res) => {
+  try {
+    const tasks = await Task.find()
+      .sort({ date: -1 })
+      .populate('project', 'title description')
+      .populate('user', 'first_name last_name');
+    res.status(200).json(tasks);
+  } catch (error) {
+    handleError(res, 500, 'Error fetching tasks', error);
+  }
+});
 
-    if (!task){
-        res.status(404)
-        throw new Error('task not found')
+// @desc Get all completed tasks
+// @route GET /api/task/done
+// @access Private
+const getTasksDone = asyncHandler(async (req, res) => {
+  try {
+    const tasks = await Task.find({ etat: 'Done' })
+      .sort({ date: -1 })
+      .populate('user', 'first_name last_name');
+    res.status(200).json(tasks);
+  } catch (error) {
+    handleError(res, 500, 'Error fetching completed tasks', error);
+  }
+});
+
+// @desc Get tasks by user ID
+// @route GET /api/task/user/:userId
+// @access Private
+const getTasksByUser = asyncHandler(async (req, res) => {
+  try {
+    const tasks = await Task.find({ user: req.params.userId })
+      .sort({ date: -1 })
+      .populate('project', 'title description');
+    if (!tasks.length) {
+      res.status(404).json({ message: 'No tasks found for this user' });
+      return;
     }
-    await Task.remove()
-    res.status(200).json({id: req.params.id})
-})
-const getTaskBystatus = asyncHandler(async(req,res)=>{
-    try {
-        const task = await Task.aggregate(
-            [
-                {
-                   $group:{
-                        _id: "$Task.user",
-                        total: {$sum: 1}
-                    }
-                    
-                }
-            ]
-        )
-        console.log(Task.status);
-        res.status(200).send(task)
-    } catch (error) {
-        console.log(error);
-        res.status(500).send(error);
+    res.status(200).json(tasks);
+  } catch (error) {
+    handleError(res, 500, 'Error fetching tasks by user', error);
+  }
+});
+
+// @desc Get tasks by project ID
+// @route GET /api/task/project/:projectId
+// @access Private
+const getTasksByProject = asyncHandler(async (req, res) => {
+  try {
+    const tasks = await Task.find({ project: req.params.projectId })
+      .sort({ date: -1 })
+      .populate('user', 'first_name last_name');
+    if (!tasks.length) {
+      res.status(404).json({ message: 'No tasks found for this project' });
+      return;
     }
-})
-module.exports={
-    getTask,
-    addTask,
-    updateTask,
-    deleteTask,
-    updateTaskByName,
-    getTaskBystatus,
-    getTaskByUser,
-    getTaskDone,
-    getTaskByProject
-}
+    res.status(200).json(tasks);
+  } catch (error) {
+    handleError(res, 500, 'Error fetching tasks by project', error);
+  }
+});
+
+// @desc Create a new task
+// @route POST /api/task
+// @access Private
+const addTask = asyncHandler(async (req, res) => {
+  try {
+    const { title, description, start_date, end_date, user, etat, project } = req.body;
+
+    // Validate required fields
+    if (!title || !description || !user || !project) {
+      res.status(400).json({ message: 'Please provide all required fields: title, description, user, and project' });
+      return;
+    }
+
+    // Create task
+    const task = await Task.create({
+      title,
+      description,
+      start_date,
+      end_date,
+      user,
+      etat,
+      project,
+    });
+
+    res.status(201).json(task);
+  } catch (error) {
+    handleError(res, 500, 'Error creating task', error);
+  }
+});
+
+// @desc Update a task by ID
+// @route PUT /api/task/:id
+// @access Private
+const updateTask = asyncHandler(async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      res.status(404).json({ message: 'Task not found' });
+      return;
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validators run on update
+    });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    handleError(res, 500, 'Error updating task', error);
+  }
+});
+
+// @desc Update a task by title
+// @route PUT /api/task/title/:title
+// @access Private
+const updateTaskByName = asyncHandler(async (req, res) => {
+  try {
+    const task = await Task.findOne({ title: req.params.title });
+    if (!task) {
+      res.status(404).json({ message: 'Task not found' });
+      return;
+    }
+
+    const updatedTask = await Task.findOneAndUpdate({ title: req.params.title }, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validators run on update
+    });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    handleError(res, 500, 'Error updating task by title', error);
+  }
+});
+
+// @desc Delete a task by ID
+// @route DELETE /api/task/:id
+// @access Private
+const deleteTask = asyncHandler(async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      res.status(404).json({ message: 'Task not found' });
+      return;
+    }
+
+    await task.remove();
+    res.status(200).json({ id: req.params.id, message: 'Task deleted successfully' });
+  } catch (error) {
+    handleError(res, 500, 'Error deleting task', error);
+  }
+});
+
+// @desc Get task statistics by status
+// @route GET /api/task/status
+// @access Private
+const getTaskStatistics = asyncHandler(async (req, res) => {
+  try {
+    const stats = await Task.aggregate([
+      {
+        $group: {
+          _id: '$etat', // Group by task status
+          total: { $sum: 1 }, // Count tasks in each group
+        },
+      },
+    ]);
+    res.status(200).json(stats);
+  } catch (error) {
+    handleError(res, 500, 'Error fetching task statistics', error);
+  }
+});
+
+module.exports = {
+  getTasks,
+  getTasksDone,
+  getTasksByUser,
+  getTasksByProject,
+  addTask,
+  updateTask,
+  deleteTask,
+  updateTaskByName,
+  getTaskStatistics,
+};
