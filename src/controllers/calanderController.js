@@ -1,33 +1,43 @@
-const asyncHandler = require('express-async-handler')
-const Calander = require('../model/calanderModel')
+const asyncHandler = require('express-async-handler');
+const Calendar = require('../models/calendarModel'); // Ensure the model name is correct
 
-const getCalander = asyncHandler(async(req,res)=>{
-    try{
-        const newEvent = await Calander.find()
-        res.status(200).json(newEvent)
-    }catch(error){
-        res.status(500).send("error:  "+error.message)
+// @desc    Get all calendar events
+// @route   GET /api/calendar
+// @access  Public
+const getCalendarEvents = asyncHandler(async (req, res) => {
+    const events = await Calendar.find();
+    res.status(200).json({
+        success: true,
+        data: events,
+    });
+});
+
+// @desc    Add a new calendar event
+// @route   POST /api/calendar
+// @access  Public
+const addCalendarEvent = asyncHandler(async (req, res) => {
+    const { title, start, end } = req.body;
+
+    // Validate required fields
+    if (!title || !start || !end) {
+        res.status(400);
+        throw new Error('Please provide all required fields: title, start, end');
     }
-})
-const addCalander = asyncHandler(async(req,res)=>{
-try { 
-    
-    if (!req.body.title && !req.body.start && req.body.end){
-        res.status(400)
-        throw new Error ('please add all ')
-    }
-    const newEvent =await Calander.create({
-        title : req.body.title,
-        start : req.body.start,
-        end: req.body.end
-    })
-    return res.status(201).json(newEvent)
-} catch (error) {
-    res.status(500).send(error.message);
-}
-  
-})
-module.exports={
-    getCalander,
-    addCalander
-}
+
+    // Create new event
+    const newEvent = await Calendar.create({
+        title,
+        start,
+        end,
+    });
+
+    res.status(201).json({
+        success: true,
+        data: newEvent,
+    });
+});
+
+module.exports = {
+    getCalendarEvents,
+    addCalendarEvent,
+};

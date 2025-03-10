@@ -1,20 +1,20 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const calanderSchema = mongoose.Schema({
-    title:{
+const calendarSchema = mongoose.Schema({
+    title: {
         type: String,
-        required : [true, 'please add your title']
+        required: [true, 'Please provide a title for the event'],
     },
-    
-    start:{
+    start: {
         type: Date,
-        required:[true, 'please add an start-date'],
-       
+        required: [true, 'Please provide a start date for the event'],
     },
-    end:{
+    end: {
         type: Date,
-        required:[true, 'please add an end-date'],
-       
+        required: [true, 'Please provide an end date for the event'],
     },
-})
-module.exports = mongoose.model('Calander',calanderSchema)
+}, {
+    timestamps: true, // Adds `createdAt` and `updatedAt` fields
+});
+
+module.exports = mongoose.model('Calendar', calendarSchema);
