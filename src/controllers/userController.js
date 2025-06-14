@@ -164,6 +164,24 @@ const getAllUsers = asyncHandler(async (req, res) => {
   return res.status(200).json(users);
 });
 
+const getUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select('-password');
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  return res.status(200).json(user);
+});
+
+const getAdmins = asyncHandler(async (req, res) => {
+  const admins = await User.find({ role: 'Admin' }).select('-password');
+  return res.status(200).json(admins);
+});
+
+const getEmployer = asyncHandler(async (req, res) => {
+  const employers = await User.find({ role: 'Employer' }).select('-password');
+  return res.status(200).json(employers);
+});
+
 const generateToken = (id, email, role, first_name) => {
   return jwt.sign({ id, email, role, first_name }, process.env.JWT_SECRET, {
     expiresIn: '10m',
@@ -178,4 +196,7 @@ module.exports = {
   deleteUser,
   getAllUsers,
   resetPassword,
+  getUser,
+  getAdmins,
+  getEmployer
 };
